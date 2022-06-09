@@ -1,5 +1,6 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import UseQuery from '../hooks/UseQuery';
+import { supabase } from '../config/supabase';
 const UserDetailsForm = () => {
   let [formData, setFormData] = useState({
     name: '',
@@ -9,7 +10,24 @@ const UserDetailsForm = () => {
   })
   const query = UseQuery();
   const id = query.get('id');
-  alert(id);
+  const [userDetails, setUserDetails] = useState<any>();
+  const [loading, setLoading] = useState<boolean>();
+  const getUserDetails = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+        .from('user-db')
+        .update({ created_at: new Date(), name: formData.name, phone: formData.phone, address: formData.address, occupation: formData.occupation},)
+        .match({ uuid: id })
+    setUserDetails(data);
+    console.log(userDetails);
+    if (error) {
+        console.log(error);
+    }
+    setLoading(false);
+}
+  useEffect(() => {
+    getUserDetails();
+  }, [])
   const formFields: any = [
     {
       id: 1,
