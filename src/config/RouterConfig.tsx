@@ -8,7 +8,7 @@ import ValidateEmail from '../components/ValidateEmail';
 const RouterConfig = () => {
     return (
         <Routes>
-            <Route path='/validate-email' element={<ValidateEmail />} />
+            <Route path='/confirm-email' element={<ValidateEmail />} />
         </Routes>
     )
 }
