@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState} from 'react';
 import UseQuery from '../hooks/UseQuery';
 import { supabase } from '../config/supabase';
 const UserDetailsForm = () => {
@@ -24,6 +24,7 @@ const UserDetailsForm = () => {
         console.log(error);
     }
     setLoading(false);
+    console.log(loading);
 }
   const formFields: any = [
     {
