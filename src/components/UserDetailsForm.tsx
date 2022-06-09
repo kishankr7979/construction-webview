@@ -12,7 +12,7 @@ const UserDetailsForm = () => {
   const id = query.get('id');
   const [userDetails, setUserDetails] = useState<any>();
   const [loading, setLoading] = useState<boolean>();
-  const getUserDetails = async () => {
+  const postFormDetails = async () => {
     setLoading(true);
     const { data, error } = await supabase
         .from('user-db')
@@ -25,9 +25,6 @@ const UserDetailsForm = () => {
     }
     setLoading(false);
 }
-  useEffect(() => {
-    getUserDetails();
-  }, [])
   const formFields: any = [
     {
       id: 1,
@@ -62,9 +59,6 @@ const UserDetailsForm = () => {
       onchange: (val) => setFormData({ ...formData, address: val })
     }
   ]
-  const sendFormData = () => {
-      console.log(formData);
-  }
 //   useEffect(() => {
 //       const datafromandroid = window?.sendData?;
 //   },[])
@@ -98,7 +92,7 @@ const UserDetailsForm = () => {
           }
         </div>
         <div style={{position: 'absolute', bottom: 10, right: 50}}>
-          <button title='NEXT' onClick={sendFormData}  style={{color: '#2196F3', height: 50, width: 50, borderRadius:50, fontSize: 10,}}>Update</button>
+          <button title='NEXT' onClick={postFormDetails}  style={{color: '#2196F3', height: 50, width: 50, borderRadius:50, fontSize: 10,}}>Update</button>
           </div>
       </div>
     </div>
