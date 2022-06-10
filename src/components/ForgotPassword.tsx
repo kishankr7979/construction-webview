@@ -25,7 +25,8 @@ function ForgotPassword() {
             }
             else if(hash){
               const hashArr = hash.substring(1).split('&').map((param) => param.split("="));
-              setToken(hash[0]);
+              setToken(hashArr[0]);
+              console.log(token);
               console.log(token[1]);
             }
           }
@@ -37,6 +38,7 @@ function ForgotPassword() {
         if(data){
           console.log(data);
           alert('password successfully updated!!');
+          window.close();
 
         }
         else if(error){
