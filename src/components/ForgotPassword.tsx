@@ -24,16 +24,16 @@ function ForgotPassword() {
               console.log('no hash');
             }
             else if(hash){
-              const hashArr = hash.substring(1).split('&').map((param) => param.split("-"));
+              const hashArr = hash.substring(1).split('&').map((param) => param.split("="));
               setToken(hash[0]);
-              console.log(hashArr[0]);
+              console.log(token[1]);
             }
           }
           catch(e){
             console.log(e);
           }
         const { error, data } = await supabase.auth.api
-        .updateUser(token, { password :passwordState.confirmPassword})
+        .updateUser(token[1], { password :passwordState.confirmPassword})
         if(data){
           console.log(data);
           alert('password successfully updated!!');
