@@ -2,7 +2,6 @@ import React,{ useState, useEffect } from 'react';
 import ValidateEmail from './ValidateEmail';
 import UseQuery from '../hooks/UseQuery';
 import { supabase } from '../config/supabase';
-import { useResetPassword } from 'react-supabase'
 function ForgotPassword() {
     const [passwordState, setPasswordState] = useState({
         password: '',
