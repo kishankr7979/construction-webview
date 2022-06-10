@@ -24,6 +24,7 @@ function ForgotPassword() {
             }
             else if(hash){
               const hashArr = hash.substring(1).split('&').map((param) => param.split("-"));
+              console.log(hashArr);
             }
           }
           catch(e){
