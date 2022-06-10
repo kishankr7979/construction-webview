@@ -17,7 +17,7 @@ const UserDetailsForm = () => {
     const { data, error } = await supabase
         .from('user-db')
         .update({ created_at: new Date(), name: formData.name, phone: formData.phone, address: formData.address, occupation: formData.occupation},)
-        .match({ uuid: id })
+        .match({ uuid: 'b29e10bd-6a2b-478e-950c-0ec0d22f8687' })
     setUserDetails(data);
     console.log(userDetails);
     if (error) {

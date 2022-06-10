@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import ValidateEmail from '../components/ValidateEmail';
 import UserDetailsForm from '../components/UserDetailsForm';
-import ForgotPassword from '../forgot-password';
+import ForgotPassword from '../components/ForgotPassword';
 const RouterConfig = () => {
     return (
         <Routes>
