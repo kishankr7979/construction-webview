@@ -12,9 +12,21 @@ function ForgotPassword() {
       // const token = query.get('token');
       const type =  query.get('type');
       const email = query.get('email')
-
+      function getParameterByName(name: string, url?: string) {
+        if (!url) url = window?.location?.href || ''
+        // eslint-disable-next-line no-useless-escape
+        name = name.replace(/[\[\]]/g, '\\$&')
+        const regex = new RegExp('[?&#]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url)
+        if (!results) return null
+        if (!results[2]) return ''
+        return decodeURIComponent(results[2].replace(/\+/g, ' '))
+      }
+      const token = getParameterByName('token');
+      alert(token);
       const updatePassword = async () => {
           alert(email);
+          // const { error } = await supabase.resetPassword('user@example.com')
         // const { error, data } = await supabase.auth.api
         // .updateUser(token, { password :passwordState.confirmPassword})
       }
