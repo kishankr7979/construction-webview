@@ -1,6 +1,7 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import UseQuery from '../hooks/UseQuery';
 import { supabase } from '../config/supabase';
+declare const window: any;
 const UserDetailsForm = () => {
   let [formData, setFormData] = useState({
     name: '',
@@ -10,24 +11,65 @@ const UserDetailsForm = () => {
   })
   const query = UseQuery();
   const id = query.get('id');
-  const [userDetails, setUserDetails] = useState<any>();
+  const checkUser = query.get('userExist');
   const [loading, setLoading] = useState<boolean>();
-  console.log(id);
-  const postFormDetails = async () => {
+  const getUserDetails = async () => {
     setLoading(true);
     const { data, error } = await supabase
-        .from('user-db')
-        .update({ created_at: new Date(), name: formData.name, phone: formData.phone, address: formData.address, occupation: formData.occupation},)
-        .match({ uuid: id })
-    setUserDetails(data);
-    console.log(userDetails);
-    window.postMessage('closeWebview', '/');
+      .from('user-db')
+      .select()
+      .match({ uuid: id })
+    setFormData({ ...formData, name: data?.[0]?.name, phone: data?.[0]?.phone, occupation: data?.[0]?.occupation, address: data?.[0]?.address })
     if (error) {
-        console.log(error);
+      console.log(error);
     }
     setLoading(false);
-    console.log(loading);
-}
+  }
+  useEffect(() => {
+    if (checkUser === 'true') {
+      (async () => {
+        await getUserDetails();
+      })();
+    }
+  }, [])
+  const postFormDetails = async () => {
+    if (checkUser === 'true') {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('user-db')
+        .update({ created_at: new Date(), name: formData.name, phone: formData.phone, address: formData.address, occupation: formData.occupation },)
+        .match({ uuid: id })
+      if (error) {
+        console.log(error);
+      }
+      if (data) {
+        try {
+          await window?.ReactNativeWebView?.postMessage('closeWebview');
+        }
+        catch (e) {
+          console.log(e);
+        }
+      }
+      setLoading(false);
+    }
+    else if (checkUser === 'false') {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('user-db')
+        .insert([
+          { created_at: new Date(), name: formData.name, phone: formData.phone, address: formData.address, occupation: formData.occupation, uuid: id },
+        ])
+      console.log(data);
+      if (data) {
+        try {
+          await window?.ReactNativeWebView?.postMessage('closeWebview');
+        }
+        catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  }
   const formFields: any = [
     {
       id: 1,
@@ -65,15 +107,15 @@ const UserDetailsForm = () => {
   return (
     <div className="container" style={styles.container}>
       <div className='formContainer' style={{
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           width: '80%',
-           borderRadius: '20px',
-           height: '500px',
-           backgroundColor: '#FFFFFF',
-           position: 'relative',
-           border: '2px solid #2196F3'
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '80%',
+        borderRadius: '20px',
+        height: '500px',
+        backgroundColor: '#FFFFFF',
+        position: 'relative',
+        border: '2px solid #2196F3'
       }}>
         <div className='inputContainer' style={styles.inputContainer}>
           {
@@ -81,15 +123,15 @@ const UserDetailsForm = () => {
               return (
                 <div key={items.id}>
                   <input style={styles.TextInputStyleClass} placeholder={items.placeholder}
-                    value={items.value} onChange={(val) => items.onchange(val.target.value)}  type={items.id === 2 ? 'number' : 'text'} required/>
+                    value={items.value} onChange={(val) => items.onchange(val.target.value)} type={items.id === 2 ? 'number' : 'text'} required />
                 </div>
               )
             })
           }
         </div>
-        <div style={{position: 'absolute', bottom: 10, right: 50}}>
-          <button title='NEXT' onClick={postFormDetails}  style={{color: '#2196F3', height: 70, width: 70, borderRadius:50, fontSize: 15,}}>Update</button>
-          </div>
+        <div style={{ position: 'absolute', bottom: 10, right: 50 }}>
+          <button title='NEXT' onClick={postFormDetails} style={{ color: '#2196F3', height: 70, width: 70, borderRadius: 50, fontSize: 15, }}>Update</button>
+        </div>
       </div>
     </div>
   )
